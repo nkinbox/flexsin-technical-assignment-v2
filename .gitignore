@@ -1,0 +1,24 @@
+# Credentials -- never commit these
+.env
+credentials/
+*.json.key
+service-account*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# Data / runtime state
+data/uploads/*
+!data/uploads/.gitkeep
+data/documents.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

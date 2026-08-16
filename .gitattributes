@@ -1,0 +1,13 @@
+# Normalise line endings to LF in the repository and on checkout.
+# This project is authored on Windows but deployed to Linux; CRLF in the
+# Caddyfile or Dockerfile causes confusing runtime failures in containers.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.pdf binary
+*.docx binary

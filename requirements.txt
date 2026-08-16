@@ -1,0 +1,27 @@
+# --- Web API ---
+fastapi>=0.115
+uvicorn[standard]>=0.32
+python-multipart>=0.0.20        # file uploads
+
+# --- Config ---
+pydantic>=2.9
+pydantic-settings>=2.6
+
+# --- Google Vertex AI (generation + vision + embeddings) ---
+google-genai>=1.0
+
+# --- Vector database ---
+weaviate-client>=4.9
+
+# --- Document extraction ---
+pypdf>=5.1                      # digital PDF text + layout
+pypdfium2>=4.30                 # render PDF page -> image (vision fallback)
+python-docx>=1.1                # DOCX paragraphs + tables
+pillow>=11.0                    # image handling
+
+# --- Utilities ---
+numpy>=2.1
+
+# --- Tests ---
+pytest>=8.3
+httpx>=0.28                     # FastAPI TestClient transport

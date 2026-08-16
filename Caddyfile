@@ -1,0 +1,44 @@
+# Caddy reverse proxy.
+#
+# SITE_ADDRESS controls the deployment mode:
+#
+#   unset / ":80"          -> plain HTTP. Use for local testing and for
+#                             reaching a Compute Engine VM by its IP address.
+#   "rag.example.com"      -> Caddy provisions and renews a Let's Encrypt
+#                             certificate automatically. Requires the domain's
+#                             A record to point at the VM, and TCP 80 + 443
+#                             open in the GCP firewall.
+#
+# Set it in .env; compose passes it through.
+
+{$SITE_ADDRESS::80} {
+	encode zstd gzip
+
+	# Uploads can be large; the app enforces its own 50 MB limit.
+	request_body {
+		max_size 60MB
+	}
+
+	# The API and UI are served by the same FastAPI app.
+	reverse_proxy app:8000 {
+		# Document ingestion runs synchronously and a scanned PDF can take a
+		# while under vision extraction, so allow a generous read timeout.
+		transport http {
+			read_timeout 600s
+			write_timeout 600s
+		}
+	}
+
+	log {
+		output stdout
+		format console
+	}
+
+	header {
+		# Basic hardening. HSTS is added only when serving HTTPS.
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+}

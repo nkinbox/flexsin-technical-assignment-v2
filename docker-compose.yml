@@ -1,0 +1,96 @@
+services:
+  # ---------------------------------------------------------------- Weaviate
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.28.2
+    container_name: rag-weaviate
+    restart: unless-stopped
+    # Bound to loopback, NOT 0.0.0.0. Weaviate has no authentication in this
+    # configuration, so on a public VM an unbound port would expose the whole
+    # index to the internet. Loopback keeps it reachable for local development
+    # while remaining unreachable from outside the host.
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:50051:50051"
+    environment:
+      # Vectors come from Vertex AI; Weaviate must never vectorize anything.
+      DEFAULT_VECTORIZER_MODULE: "none"
+      ENABLE_MODULES: ""
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+      # Weaviate stores its Raft peer address in the persisted volume. Without
+      # a stable hostname it records the *container IP*, and the next restart
+      # gets a different IP -- the node then tries forever to rejoin its own
+      # former address, never reports ready, and every dependent service hangs.
+      # Pinning the hostname makes restarts and network changes safe.
+      CLUSTER_HOSTNAME: "rag-weaviate"
+      RAFT_BOOTSTRAP_EXPECT: "1"
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/v1/.well-known/ready"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    networks: [ragnet]
+
+  # --------------------------------------------------------------- FastAPI
+  app:
+    build: .
+    container_name: rag-app
+    restart: unless-stopped
+    depends_on:
+      weaviate:
+        condition: service_healthy
+    environment:
+      # Inside the compose network Weaviate is reachable by service name.
+      WEAVIATE_HOST: weaviate
+      WEAVIATE_HTTP_PORT: 8080
+      WEAVIATE_GRPC_PORT: 50051
+      PROVIDER: ${PROVIDER:-dev}
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID:-}
+      GCP_REGION: ${GCP_REGION:-us-central1}
+      GEN_MODEL: ${GEN_MODEL:-gemini-2.5-pro}
+      EMBED_MODEL: ${EMBED_MODEL:-gemini-embedding-001}
+      RELEVANCE_FLOOR: ${RELEVANCE_FLOOR:-}
+      UPLOAD_DIR: /app/data/uploads
+    volumes:
+      - app_data:/app/data
+      # Only used for the service-account-key fallback. On Compute Engine the
+      # attached service account is read from the metadata server, which
+      # containers reach without any mount -- leave this commented out.
+      # - ./credentials:/app/credentials:ro
+    # No published ports: the app is reachable only through Caddy.
+    expose:
+      - "8000"
+    networks: [ragnet]
+
+  # ----------------------------------------------------------------- Caddy
+  caddy:
+    image: caddy:2.10-alpine
+    container_name: rag-caddy
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3
+    environment:
+      # ":80" for IP access; a hostname triggers automatic HTTPS.
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # certificates -- persist or you will hit rate limits
+      - caddy_config:/config
+    networks: [ragnet]
+
+networks:
+  ragnet:
+    driver: bridge
+
+volumes:
+  weaviate_data:
+  app_data:
+  caddy_data:
+  caddy_config:

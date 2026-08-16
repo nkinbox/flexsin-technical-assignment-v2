@@ -1,0 +1,239 @@
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --ink: #16181d;
+  --ink-soft: #5b6270;
+  --ink-faint: #8b93a1;
+  --line: #e3e6ec;
+  --accent: #2f5bd8;
+  --accent-soft: #eaf0ff;
+  --good: #1a7f4b;
+  --good-soft: #e6f5ec;
+  --warn: #a8621a;
+  --warn-soft: #fdf0e2;
+  --bad: #b3261e;
+  --highlight: #fff2a8;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 4px 14px rgba(16, 24, 40, .05);
+}
+
+* { box-sizing: border-box; }
+
+/* The `hidden` attribute hides elements via the user-agent stylesheet, which
+   any author `display` rule silently overrides -- `.drawer { display: flex }`
+   would otherwise leave the source panel permanently open. Restate it here so
+   `hidden` wins regardless of what a component sets. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ------------------------------------------------------------- topbar */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px; background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  font-size: 26px; color: var(--accent);
+  width: 40px; height: 40px; display: grid; place-items: center;
+  background: var(--accent-soft); border-radius: var(--radius);
+}
+.topbar h1 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.01em; }
+.tagline { margin: 1px 0 0; font-size: 12.5px; color: var(--ink-faint); }
+
+.status {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; color: var(--ink-soft);
+  background: var(--bg); padding: 6px 11px; border-radius: 999px;
+  border: 1px solid var(--line);
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-faint); }
+.dot.ok { background: var(--good); }
+.dot.bad { background: var(--bad); }
+
+/* ------------------------------------------------------------- layout */
+.layout {
+  display: grid; grid-template-columns: 320px 1fr; gap: 18px;
+  padding: 18px 22px; align-items: start;
+  height: calc(100vh - 69px);
+}
+.panel {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.documents { padding: 16px; height: 100%; display: flex; flex-direction: column; }
+.documents h2 { margin: 0 0 12px; font-size: 13px; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--ink-faint); }
+
+/* ---------------------------------------------------------- dropzone */
+.dropzone {
+  border: 1.5px dashed var(--line); border-radius: var(--radius);
+  padding: 22px 14px; text-align: center; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.dropzone.dragging { border-color: var(--accent); background: var(--accent-soft); }
+.dropzone-icon { font-size: 22px; color: var(--accent); }
+.dropzone p { margin: 5px 0 0; font-size: 13px; }
+.dropzone .hint { color: var(--ink-faint); font-size: 11.5px; }
+
+.upload-queue { margin-top: 10px; display: grid; gap: 6px; }
+.upload-item {
+  font-size: 12px; padding: 7px 10px; border-radius: 7px;
+  background: var(--bg); border: 1px solid var(--line);
+  display: flex; justify-content: space-between; gap: 8px; align-items: center;
+}
+.upload-item.error { background: #fdecea; border-color: #f5c6c2; color: var(--bad); }
+.upload-item .spinner {
+  width: 12px; height: 12px; border: 2px solid var(--line);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin .7s linear infinite; flex: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* -------------------------------------------------------- doc list */
+.doc-list-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin: 16px 0 7px; font-size: 12px; color: var(--ink-faint);
+}
+.link-btn {
+  background: none; border: 0; color: var(--accent); cursor: pointer;
+  font-size: 12px; padding: 0; text-decoration: underline;
+}
+.doc-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
+.doc-item {
+  display: flex; gap: 9px; align-items: flex-start;
+  padding: 9px; border-radius: 8px; border: 1px solid transparent;
+}
+.doc-item:hover { background: var(--bg); border-color: var(--line); }
+.doc-item input { margin-top: 3px; accent-color: var(--accent); }
+.doc-info { flex: 1; min-width: 0; }
+.doc-name {
+  font-size: 13px; font-weight: 550; word-break: break-word; line-height: 1.35;
+}
+.doc-sub { font-size: 11.5px; color: var(--ink-faint); margin-top: 2px; }
+.badge-vision {
+  display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 999px;
+  background: var(--warn-soft); color: var(--warn); margin-left: 5px;
+}
+.icon-btn {
+  background: none; border: 0; cursor: pointer; color: var(--ink-faint);
+  font-size: 17px; line-height: 1; padding: 2px 5px; border-radius: 6px;
+}
+.icon-btn:hover { background: var(--line); color: var(--bad); }
+.scope-note {
+  margin: 9px 0 0; font-size: 11.5px; color: var(--ink-faint);
+  border-top: 1px solid var(--line); padding-top: 9px;
+}
+
+/* ------------------------------------------------------------- chat */
+.chat { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+.messages { flex: 1; overflow-y: auto; padding: 20px 22px; }
+.empty-state { text-align: center; margin: 12vh auto; max-width: 400px; color: var(--ink-soft); }
+.empty-state h3 { margin: 0 0 7px; font-size: 16px; color: var(--ink); }
+.empty-state p { margin: 0; font-size: 13.5px; }
+
+.msg { margin-bottom: 18px; display: flex; gap: 11px; }
+.msg .avatar {
+  width: 27px; height: 27px; border-radius: 7px; flex: none;
+  display: grid; place-items: center; font-size: 12px; font-weight: 650;
+}
+.msg.user .avatar { background: var(--ink); color: #fff; }
+.msg.bot .avatar { background: var(--accent-soft); color: var(--accent); }
+.msg .body { flex: 1; min-width: 0; padding-top: 2px; }
+.msg .text { white-space: pre-wrap; word-wrap: break-word; }
+
+.answer-meta {
+  margin-top: 9px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center;
+}
+.pill {
+  font-size: 11px; padding: 2.5px 9px; border-radius: 999px;
+  border: 1px solid transparent; font-weight: 550;
+}
+.pill.grounded { background: var(--good-soft); color: var(--good); }
+.pill.ungrounded { background: var(--warn-soft); color: var(--warn); }
+.pill.neutral { background: var(--bg); color: var(--ink-soft); border-color: var(--line); }
+
+.cite {
+  display: inline-block; min-width: 19px; text-align: center;
+  background: var(--accent-soft); color: var(--accent);
+  border-radius: 5px; font-size: 11.5px; font-weight: 650;
+  padding: 0 5px; margin: 0 1px; cursor: pointer;
+  border: 1px solid transparent; vertical-align: baseline;
+}
+.cite:hover { border-color: var(--accent); }
+
+.sources { margin-top: 11px; display: grid; gap: 5px; }
+.source-row {
+  display: flex; gap: 8px; align-items: baseline; font-size: 12px;
+  color: var(--ink-soft); cursor: pointer; padding: 5px 8px;
+  border-radius: 7px; border: 1px solid var(--line); background: var(--bg);
+}
+.source-row:hover { border-color: var(--accent); }
+.source-row .n { color: var(--accent); font-weight: 650; }
+.source-row .path { color: var(--ink-faint); }
+
+.typing { display: flex; gap: 4px; padding: 5px 0; }
+.typing span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint);
+  animation: bounce 1.3s infinite;
+}
+.typing span:nth-child(2) { animation-delay: .18s; }
+.typing span:nth-child(3) { animation-delay: .36s; }
+@keyframes bounce { 0%, 60%, 100% { opacity: .3 } 30% { opacity: 1 } }
+
+/* --------------------------------------------------------- composer */
+.composer {
+  display: flex; gap: 9px; padding: 13px 16px;
+  border-top: 1px solid var(--line); align-items: flex-end;
+}
+.composer textarea {
+  flex: 1; resize: none; border: 1px solid var(--line); border-radius: 9px;
+  padding: 10px 12px; font: inherit; max-height: 150px; outline: none;
+}
+.composer textarea:focus { border-color: var(--accent); }
+.composer button {
+  background: var(--accent); color: #fff; border: 0; border-radius: 9px;
+  padding: 10px 18px; font: inherit; font-weight: 550; cursor: pointer;
+}
+.composer button:disabled { background: var(--ink-faint); cursor: not-allowed; }
+.composer-meta {
+  display: flex; justify-content: space-between; padding: 0 16px 11px;
+  font-size: 11.5px; color: var(--ink-faint);
+}
+
+/* ----------------------------------------------------------- drawer */
+.drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(16, 24, 40, .28); z-index: 40;
+}
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 92vw);
+  background: var(--panel); z-index: 50; display: flex; flex-direction: column;
+  box-shadow: -8px 0 26px rgba(16, 24, 40, .13);
+}
+.drawer-head {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 16px 18px; border-bottom: 1px solid var(--line);
+}
+.drawer-head h3 { margin: 0; font-size: 15px; }
+.drawer-meta { margin: 3px 0 0; font-size: 12px; color: var(--ink-faint); }
+.drawer-body {
+  padding: 18px; overflow-y: auto; white-space: pre-wrap;
+  font-size: 13.5px; line-height: 1.65; color: var(--ink-soft);
+}
+.drawer-body mark {
+  background: var(--highlight); color: var(--ink);
+  padding: 1px 2px; border-radius: 3px;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; height: auto; }
+  .documents { height: auto; }
+  .chat { height: 70vh; }
+}

@@ -1,0 +1,128 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<<
+/Producer (pypdf)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Count 2
+/Kids [ 4 0 R 8 0 R ]
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+/Outlines 7 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Page
+/MediaBox [ 0 0 612 792 ]
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
+/Contents 6 0 R
+/Parent 2 0 R
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<<
+/Length 450
+>>
+stream
+BT /F1 11 Tf 50 750 Td 14 TL
+(Infrastructure Review 2024) Tj T*
+(Confidential - Internal Only) Tj T*
+() Tj T*
+(Database Migration) Tj T*
+() Tj T*
+(The migration to the new cluster completed in November. Latency) Tj T*
+(improved by 38 percent across all read paths. The rollout affected) Tj T*
+(three regions and required a brief maintenance window, primarily) Tj T*
+(because the connection pooling configuration) Tj T*
+() Tj T*
+(Page 1 of 2) Tj T*
+ET
+endstream
+endobj
+7 0 obj
+<<
+>>
+endobj
+8 0 obj
+<<
+/Type /Page
+/MediaBox [ 0 0 612 792 ]
+/Resources <<
+/Font <<
+/F1 9 0 R
+>>
+>>
+/Contents 10 0 R
+/Parent 2 0 R
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+10 0 obj
+<<
+/Length 416
+>>
+stream
+BT /F1 11 Tf 50 750 Td 14 TL
+(Infrastructure Review 2024) Tj T*
+(Confidential - Internal Only) Tj T*
+() Tj T*
+(had to be rebuilt for the new topology. No data loss occurred during) Tj T*
+(the migration and no rollback was required.) Tj T*
+() Tj T*
+(Cost Impact) Tj T*
+() Tj T*
+(Monthly infrastructure spend decreased from 82000 to 61000 dollars) Tj T*
+(following the migration.) Tj T*
+() Tj T*
+(Page 2 of 2) Tj T*
+ET
+endstream
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000054 00000 n 
+0000000119 00000 n 
+0000000184 00000 n 
+0000000312 00000 n 
+0000000382 00000 n 
+0000000883 00000 n 
+0000000904 00000 n 
+0000001033 00000 n 
+0000001103 00000 n 
+trailer
+<<
+/Size 11
+/Root 3 0 R
+/Info 1 0 R
+>>
+startxref
+1571
+%%EOF

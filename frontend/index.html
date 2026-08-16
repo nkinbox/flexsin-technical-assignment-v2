@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Document-Aware AI Chatbot</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◧</span>
+      <div>
+        <h1>Document-Aware AI Chatbot</h1>
+        <p class="tagline">Answers grounded in your documents, with citations</p>
+      </div>
+    </div>
+    <div class="status" id="status">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">connecting…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ---------------------------------------------------- Documents -->
+    <aside class="panel documents">
+      <h2>Documents</h2>
+
+      <div class="dropzone" id="dropzone" tabindex="0" role="button"
+           aria-label="Upload documents">
+        <div class="dropzone-icon">↥</div>
+        <p><strong>Drop files</strong> or click to browse</p>
+        <p class="hint">PDF · DOCX · TXT · PNG/JPG</p>
+        <input type="file" id="fileInput" multiple hidden
+               accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tiff" />
+      </div>
+
+      <div id="uploadQueue" class="upload-queue"></div>
+
+      <div class="doc-list-header">
+        <span id="docCount">0 documents</span>
+        <button id="selectAll" class="link-btn" type="button">select all</button>
+      </div>
+      <ul id="docList" class="doc-list"></ul>
+      <p class="scope-note" id="scopeNote">Searching all documents</p>
+    </aside>
+
+    <!-- --------------------------------------------------------- Chat -->
+    <section class="panel chat">
+      <div id="messages" class="messages">
+        <div class="empty-state">
+          <h3>Ask a question about your documents</h3>
+          <p>
+            Answers come only from what you upload. If the documents don't
+            contain the answer, the assistant says so instead of guessing.
+          </p>
+        </div>
+      </div>
+
+      <form id="chatForm" class="composer">
+        <textarea id="question" rows="1" placeholder="Ask a question…"
+                  autocomplete="off"></textarea>
+        <button type="submit" id="sendBtn" title="Send">Send</button>
+      </form>
+      <div class="composer-meta">
+        <button type="button" id="newChat" class="link-btn">new conversation</button>
+        <span id="sessionLabel"></span>
+      </div>
+    </section>
+  </main>
+
+  <!-- ------------------------------------------------- Source drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <aside class="drawer" id="drawer" hidden aria-label="Source passage">
+    <div class="drawer-head">
+      <div>
+        <h3 id="drawerTitle">Source</h3>
+        <p id="drawerMeta" class="drawer-meta"></p>
+      </div>
+      <button id="drawerClose" class="icon-btn" type="button" aria-label="Close">×</button>
+    </div>
+    <div id="drawerBody" class="drawer-body"></div>
+  </aside>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
